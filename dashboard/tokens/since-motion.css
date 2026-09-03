@@ -1,0 +1,154 @@
+/* ==========================================================================
+   Since Labs — motion
+   v2.3.0
+
+   The only animations this brand sanctions, as reusable classes.
+
+   Import AFTER since-brand.css (it supplies --sl-ease and the three
+   durations) and after tailwind-theme.css if you use one:
+
+     @import "@sincelabs/brand/tokens/since-brand.css";
+     @import "@sincelabs/brand/tokens/since-motion.css";
+
+   Why a file rather than a note in the guide: motion is the rule people
+   reimplement most often, and every reimplementation drifts a little longer
+   and a little bouncier. docs/08-motion.md says nothing animates past 320ms
+   and there is exactly one easing curve. That is only true if there is one
+   place the keyframes live. This is it.
+
+   Everything here degrades to its END STATE under prefers-reduced-motion —
+   never to a missing state. See § "Reduced motion" at the bottom.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Keyframes — the complete sanctioned set. Six.
+   Adding a seventh is a brand decision, not an implementation detail.
+   -------------------------------------------------------------------------- */
+
+/* Loading spinner. The one place rotation is allowed (docs/08-motion.md 8.3).
+   Linear, because a spinner that eases is a spinner that looks broken. */
+@keyframes sl-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Skeleton placeholder. A 2s opacity pulse — not a shimmer sweep, which is a
+   translate animation dressed up as a loading state. */
+@keyframes sl-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+/* Indeterminate progress. A bar that travels because we genuinely cannot say
+   how far along we are. Use a determinate bar wherever you can. */
+@keyframes sl-indeterminate {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+/* Backdrop behind a drawer or a sheet. Opacity only. */
+@keyframes sl-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Disclosure and toast entry: a fade with a 4px settle. Four pixels, because
+   the movement is there to say "this is new", not to be watched. */
+@keyframes sl-rise {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Drawers and sheets. The only full-distance translate in the system.
+
+   The starting edge is a variable so one keyframe covers both sides: a
+   right-hand drawer sets `--sl-slide-from: 100%` on itself. Two mirrored
+   keyframes would be two things to keep at 200ms. */
+@keyframes sl-slide-in {
+  from { transform: translateX(var(--sl-slide-from, -100%)); }
+  to   { transform: translateX(0); }
+}
+
+/* --------------------------------------------------------------------------
+   Transition presets
+
+   Always a property list, never `all`. `transition-all` animates properties
+   you did not intend — a width computed by a sibling, a colour inherited from
+   a parent — and is what produces the jelly feel of a cheap interface.
+   -------------------------------------------------------------------------- */
+
+/* The default. Roughly all motion in a Since Labs product is this one line. */
+.sl-transition {
+  transition-property: color, background-color, border-color, outline-color,
+    text-decoration-color, fill, stroke, opacity, box-shadow;
+  transition-duration: var(--sl-duration-fast);
+  transition-timing-function: var(--sl-ease);
+}
+
+/* Position changes: drawers, disclosure, anything that moves. */
+.sl-transition-move {
+  transition-property: transform, opacity;
+  transition-duration: var(--sl-duration-base);
+  transition-timing-function: var(--sl-ease);
+}
+
+/* --------------------------------------------------------------------------
+   Animation utilities
+   -------------------------------------------------------------------------- */
+
+.sl-animate-spin   { animation: sl-spin 1s linear infinite; }
+.sl-animate-pulse  { animation: sl-pulse 2s var(--sl-ease) infinite; }
+.sl-animate-rise   { animation: sl-rise var(--sl-duration-base) var(--sl-ease) both; }
+.sl-animate-fade   { animation: sl-fade-in var(--sl-duration-base) var(--sl-ease) both; }
+.sl-animate-slide  { animation: sl-slide-in var(--sl-duration-base) var(--sl-ease) both; }
+.sl-animate-track  { animation: sl-indeterminate 1.4s var(--sl-ease) infinite; }
+
+/* --------------------------------------------------------------------------
+   Focus
+
+   Not strictly motion, but it belongs next to it: the ring is the one piece of
+   feedback that must never animate. A keyboard user tabbing quickly through a
+   form has to see where they are without waiting 120ms per stop, so the ring
+   is excluded from .sl-transition's property list by having its own rule that
+   sets no duration at all.
+   -------------------------------------------------------------------------- */
+
+.sl-focus-ring:focus-visible {
+  outline: 2px solid var(--sl-accent);
+  outline-offset: 2px;
+  transition: none;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+
+   since-brand.css already flattens every duration globally. This block does
+   the part a duration cannot: an infinite animation with a 0.01ms duration
+   still runs — it just runs very fast — so a spinner under reduced motion
+   becomes a strobe rather than a still. Stop them outright, and hold each at
+   the frame that reads as its resting state.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .sl-animate-spin,
+  .sl-animate-pulse,
+  .sl-animate-track {
+    animation: none !important;
+  }
+
+  /* A stopped spinner still has to say "working". Opacity carries it. */
+  .sl-animate-spin  { opacity: 0.65; }
+  .sl-animate-pulse { opacity: 0.7; }
+
+  /* An indeterminate track cannot travel, so it fills instead: still visibly
+     a bar in progress, with nothing moving. */
+  .sl-animate-track { transform: none; width: 100%; }
+
+  /* Entrances resolve to their end state, which is simply "present". */
+  .sl-animate-rise,
+  .sl-animate-fade,
+  .sl-animate-slide {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}

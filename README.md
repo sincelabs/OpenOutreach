@@ -178,6 +178,10 @@ finishes: a wrong key is an answer you can retype, not a traceback halfway throu
 The BetterContact link above is an **affiliate link** — signing up through it supports OpenOutreach,
 at no markup to you.
 
+**Prefer a browser to a terminal?** `dashboard/` is a password-gated web UI over the same four
+questions and everything else onboarding can ask — see `dashboard/README.md`. It only edits that
+one row; it does not find or send anything itself.
+
 ---
 
 **Why choose OpenOutreach?**
@@ -254,6 +258,7 @@ This repo is the orchestrator and holds no pipeline of its own — that is the p
 │   ├── settings.py     # one Django registry hosting both children's apps, on one database
 │   ├── config/         # the one model: the answers you gave, and the variables they export as
 │   └── wizard.py       # one onboarding — ask once, keep it, hand it to both children
+├── dashboard/          # a separate Next.js app: the same onboarding, from a browser
 ├── tests/              # the registry, the wizard's row and export, the CLI's own decisions
 ├── manage.py           # checkout shim over openoutreach/__main__.py
 ├── pyproject.toml      # package metadata, pinned children, console script

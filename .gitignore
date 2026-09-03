@@ -17,3 +17,9 @@ uv.lock
 /media/
 .cache/
 tests/fixtures/pages/**/*.html
+
+# dashboard/ — the Next.js config UI, built and installed independently of the Python package.
+dashboard/node_modules/
+dashboard/.next/
+dashboard/next-env.d.ts
+dashboard/*.tsbuildinfo

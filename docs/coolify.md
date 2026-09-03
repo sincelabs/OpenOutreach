@@ -103,12 +103,27 @@ when these are unset, so only set them if you need something else:
 The full field-by-field explanation lives in `openoutreach/config/models.py` (`FINDER_ENV` /
 `SENDER_ENV`) if you want the source rather than this table.
 
+**Or skip this table entirely and set one variable instead: `DASHBOARD_PASSWORD`.** Every field
+above can be typed into the `dashboard` service's web UI once it's running (step 3.1) rather than
+into this tab — see `dashboard/README.md`. The two paths can mix, but a variable set here (blank
+included) wins over whatever the dashboard has stored for that same field; pick one path per
+field rather than fighting the other.
+
 ## 3. Deploy
 
 Click **Deploy**. Coolify clones `sincelabs/OpenOutreach` at the branch you picked, runs
 `docker build` against `compose/openoutreach/Dockerfile` from that checkout, and starts the `app`
-service running `sleep infinity` — it just idles, holding the `app-data` volume. Nothing has been
-found or sent yet.
+service running `sleep infinity` — it just idles, holding the `app-data` volume. It also runs the
+`migrate` service once (creates the schema, exits) and starts `dashboard`. Nothing has been found
+or sent yet.
+
+### 3.1. The config dashboard
+
+`dashboard` is the one service in `coolify.yml` that listens on a port (3000) — Coolify's Docker
+Compose build pack notices that and lets you give it a domain: resource → the `dashboard` service
+in the service list → **Domains**, set an FQDN (or use the `*.sslip.io` one Coolify offers), and
+it's reachable at that address, gated by the `DASHBOARD_PASSWORD` you set in step 2. No port or
+domain is needed on `app` or `migrate` — they stay exactly as idle/one-shot as before.
 
 ## 4. Schedule the actual job
 
@@ -141,16 +156,19 @@ of built.
 
 ## Checking on it
 
-There's no web surface — no URLconf, no Django Admin (see `docs/docker.md`). Two ways in:
+There's no web surface over the pipeline itself — no URLconf, no Django Admin (see
+`docs/docker.md`). Three ways in:
 
-- Resource → **Terminal** drops you into a shell in the idling container: run
+- The `dashboard` domain from step 3.1, for the config row — nothing else.
+- Resource → **Terminal** drops you into a shell in the idling `app` container: run
   `openoutreach status --json`.
 - Resource → **Storages** → browse the `app-data` volume and pull `db.sqlite3` with any SQLite
   client — one file holds the finder's leads and the sender's mail log both.
 
-## No port, no health check
+## No port, no health check on `app` or `migrate`
 
-Don't add either to this resource. There's nothing listening and nothing to probe.
+Don't add either to those two services. There's nothing listening and nothing to probe on them —
+`dashboard` is the only service in this stack that needs a port, and step 3.1 is where it gets one.
 
 ---
 

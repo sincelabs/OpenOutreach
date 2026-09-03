@@ -1,0 +1,284 @@
+/* ==========================================================================
+   Since Labs — brand tokens
+   v2.0.0 · 2026-08-28
+   Framework-agnostic CSS custom properties. Drop in anywhere.
+
+   These values are observed from the shipped sincelabs.com site and the
+   sincelabs/app portal. They are the contract. See docs/04-color.md.
+   ========================================================================== */
+
+:root {
+  /* Native UI — scrollbars, form controls, the canvas behind an overscroll —
+     follows this. Without it a dark-themed page keeps a white scrollbar. */
+  color-scheme: light;
+
+  /* --- Ink ------------------------------------------------------------- */
+  --sl-ink:              #1A1917;   /* headlines, dark ground              */
+  --sl-ink-body:         #2C2A28;   /* running body copy                   */
+  --sl-ink-muted:        #6B6762;   /* labels, captions, secondary         */
+  --sl-on-ink:           #F5F1EA;   /* text on ink — warm, never pure white*/
+
+  /* --- Paper (page grounds) -------------------------------------------- */
+  --sl-paper:            #F7F5F2;   /* the default background              */
+  --sl-paper-base:       #F4F3F1;   /* recessed chrome: sidebars, rails    */
+
+  /* --- Surfaces (things on top of paper) ------------------------------- */
+  --sl-surface:          #FFFFFF;   /* cards, panels, inputs, modals       */
+  --sl-surface-mist:     #EFEFEC;   /* subtle neutral fill, hover          */
+  --sl-surface-cream:    #F0E4DA;   /* warm accent fill                    */
+
+  /* --- Borders ---------------------------------------------------------- */
+  --sl-border:           #E5E2DE;   /* default hairline                    */
+  --sl-border-strong:    #D8D5D0;   /* inputs, secondary buttons           */
+
+  /* --- Accent: terracotta ----------------------------------------------
+     #C4602A is a FILL colour. It is 4.16:1 on white — below AA for text.
+     Use --sl-accent-ink for anything a person has to read.               */
+  --sl-accent:           #C4602A;   /* fills, the // mark, focus, charts   */
+  --sl-accent-hover:     #A84E22;   /* fill hover on light                 */
+  --sl-accent-ink:       #A34A1F;   /* TEXT + links on light — 5.9:1       */
+  --sl-accent-ink-hover: #8B3D18;
+  --sl-accent-lift:      #E07A38;   /* terracotta on DARK surfaces         */
+  --sl-accent-soft:      rgba(196, 96, 42, 0.12);
+  --sl-accent-light:     #F0E4DA;
+
+  /* --- Accent as a FILL THAT CARRIES A LABEL -------------------------------
+     A filled primary button is the one place the accent has text sitting on
+     top of it, and the two themes cannot use the same pair.
+
+       light:  white on #A34A1F  = 5.90:1  ✅
+       dark:   white on #E07A38  = 3.00:1  ✗  — fails AA
+               ink   on #E07A38  = 5.95:1  ✅
+
+     So the label colour flips with the theme while the fill stays terracotta.
+     Use these for a filled control; --sl-accent-ink stays the TEXT colour for
+     links and labels drawn directly on paper.                               */
+  --sl-accent-fill:       #A34A1F;
+  --sl-accent-fill-hover: #8B3D18;
+  --sl-on-accent:         #FFFFFF;
+
+  /* --- Status ----------------------------------------------------------- */
+  --sl-success-bg:   #EAF3DE;  --sl-success-text:   #3B6D11;  --sl-success-dot:   #639922;
+  --sl-attention-bg: #F0E4DA;  --sl-attention-text: #9A4A1F;  --sl-attention-dot: #C4602A;
+  --sl-warning-bg:   #FFF3E0;  --sl-warning-text:   #8A4A05;  --sl-warning-dot:   #B25C00;
+  --sl-error-bg:     #FCEBEB;  --sl-error-text:     #791F1F;  --sl-error-dot:     #E24B4A;
+  --sl-info-bg:      #EBF0F7;  --sl-info-text:      #3A4A60;  --sl-info-dot:      #3A4A60;
+  --sl-neutral-bg:   #EFEFEC;  --sl-neutral-text:   #6B6762;  --sl-neutral-dot:   #6B6762;
+
+  /* --- Code ---------------------------------------------------------------
+     A code block is a dark surface by design, not an inverted one. Left to
+     invert with everything else it becomes a paper-coloured box floating on an
+     ink page, which reads as a rendering error rather than as machine output.
+     So these are redefined for dark rather than flipped: the ground stays
+     dark and lifts just enough to separate from the page.                    */
+  --sl-code-bg:     #1A1917;
+  --sl-code-fg:     #F5F1EA;
+  --sl-code-border: #1A1917;   /* invisible against its own fill, on purpose */
+
+  /* --- Scrim ---------------------------------------------------------------
+     The wash behind a modal or a drawer. A scrim always DARKENS, in both
+     themes: built from --sl-ink it inverts to a paper-coloured haze over an
+     ink page, which washes the content out instead of receding it.          */
+  --sl-scrim: rgba(26, 25, 23, 0.40);
+
+  /* --- Data visualisation ----------------------------------------------- */
+  /* Sequential ramp — one measure, ranked. Darkest is largest. */
+  --sl-chart-1: #A34A1F;  --sl-chart-2: #C4602A;  --sl-chart-3: #D27C53;
+  --sl-chart-4: #E9A88A;  --sl-chart-5: #F4D2C3;
+  /* Categorical — unordered series, terracotta leading. */
+  --sl-cat-1: #C4602A;  --sl-cat-2: #3A4A60;  --sl-cat-3: #639922;
+  --sl-cat-4: #7A4A5F;  --sl-cat-5: #2C2A28;
+  /* Named aliases used by status-adjacent charts. */
+  --sl-chart-slate: #3A4A60;  --sl-chart-moss: #639922;  --sl-chart-amber: #B25C00;
+  --sl-chart-wine: #7A4A5F;
+
+  /* --- Type ------------------------------------------------------------- */
+  --sl-font-serif: var(--font-lora, "Lora"), Georgia, serif;
+  --sl-font-sans:  var(--font-dm-sans, "DM Sans"), system-ui, sans-serif;
+  --sl-font-mono:  var(--font-geist-mono, "Geist Mono"), ui-monospace, monospace;
+
+  --sl-text-hero:      42px;   --sl-leading-hero:      1.1;
+  --sl-text-title:     28px;   --sl-leading-title:     1.15;
+  --sl-text-section:   20px;   --sl-leading-section:   1.3;
+  --sl-text-panel:     15px;   --sl-leading-panel:     1.4;
+  --sl-text-body:      14px;   --sl-leading-body:      1.6;
+  --sl-text-ui:        13.5px; --sl-leading-ui:        1.5;
+  --sl-text-secondary: 12.5px; --sl-leading-secondary: 1.5;
+  --sl-text-eyebrow:   12px;   --sl-tracking-eyebrow:  0.08em;
+  --sl-text-micro:     11px;
+
+  --sl-measure-prose:   62ch;
+  --sl-measure-caption: 46ch;
+
+  /* --- Form ------------------------------------------------------------- */
+  --sl-radius-xs: 5px;  --sl-radius-sm: 7px;   --sl-radius-md: 9px;
+  --sl-radius-lg: 12px; --sl-radius-xl: 14px;  --sl-radius-2xl: 16px;
+  --sl-radius-full: 9999px;
+
+  --sl-shadow-raised:  0 1px 2px rgba(26, 25, 23, 0.04);
+  --sl-shadow-lifted:  0 2px 8px rgba(26, 25, 23, 0.06);
+  --sl-shadow-overlay: 0 16px 48px rgba(26, 25, 23, 0.16);
+
+  --sl-control-sm: 32px;  --sl-control-md: 38px;  --sl-control-lg: 48px;
+
+  --sl-ease: cubic-bezier(0.2, 0, 0, 1);
+  --sl-duration-fast: 120ms;  --sl-duration-base: 200ms;  --sl-duration-slow: 320ms;
+}
+
+/* ==========================================================================
+   Dark theme
+   The brand inverts; it does not switch palettes. The ground becomes ink,
+   and terracotta lifts to --sl-accent-lift so it still passes AA.
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --sl-paper:         #1A1917;
+    --sl-paper-base:    #1A1917;
+    --sl-surface:       #232120;
+    --sl-surface-mist:  #2C2A28;
+    --sl-surface-cream: #2E1E0F;
+
+    --sl-ink:           #F5F1EA;
+    --sl-ink-body:      #F5F1EA;
+    --sl-ink-muted:     #98938C;   /* 5.8:1 — NOT #7A7570, which is 3.9:1 */
+    --sl-on-ink:        #1A1917;
+
+    --sl-border:        #38352F;
+    --sl-border-strong: #454138;
+
+    --sl-accent:        #E07A38;
+    --sl-accent-hover:  #F0965C;
+    --sl-accent-ink:    #E07A38;
+    --sl-accent-ink-hover: #F0965C;
+    --sl-accent-soft:   rgba(224, 122, 56, 0.16);
+    --sl-accent-light:  #2E1E0F;
+
+    /* The fill keeps the lifted terracotta; the label on it becomes ink.
+       White on #E07A38 is 3.00:1 and fails AA — see the light block. */
+    --sl-accent-fill:       #E07A38;
+    --sl-accent-fill-hover: #F0965C;
+    --sl-on-accent:         #1A1917;
+
+    --sl-code-bg:     #232120;
+    --sl-code-fg:     #F5F1EA;
+    --sl-code-border: #38352F;
+    --sl-scrim:       rgba(0, 0, 0, 0.62);
+
+    /* --- Status ------------------------------------------------------------
+       Same six hues, inverted the way the rest of the palette inverts: the
+       fill drops to a dark tint of its own hue, the label lifts until it
+       clears AA on that fill. Without these the light fills survive into the
+       dark theme and every chip becomes cream-on-cream.
+       Ratios below are label-on-fill.                                       */
+    --sl-success-bg:     #26321C;  --sl-success-text:   #83B456;  --sl-success-dot:    #639922; /* 5.6:1 */
+    --sl-attention-bg:   #40291E;  --sl-attention-text: #EF8D5D;  --sl-attention-dot:  #C4602A; /* 5.6:1 */
+    --sl-warning-bg:     #3F2A1B;  --sl-warning-text:   #E89150;  --sl-warning-dot:    #B7600B; /* 5.5:1 */
+    --sl-error-bg:       #422725;  --sl-error-text:     #F3867F;  --sl-error-dot:      #E24B4A; /* 5.5:1 */
+    --sl-info-bg:        #292F36;  --sl-info-text:      #95A7BF;  --sl-info-dot:       #677890; /* 5.5:1 */
+    --sl-neutral-bg:     #2F2E2C;  --sl-neutral-text:   #A9A5A0;  --sl-neutral-dot:    #7A7670; /* 5.5:1 */
+
+    /* --- Data visualisation -------------------------------------------------
+       Every mark lifted until it clears 3:1 on dark.surface (#232120). The
+       light set cannot carry over: slot 5 is near-black ink, which is
+       invisible on an ink ground.                                          */
+    --sl-chart-1: #B0562C;  --sl-chart-2: #C4602A;  --sl-chart-3: #D27C53;
+    --sl-chart-4: #E9A88A;  --sl-chart-5: #F4D2C3;
+    /* Categorical. Slots 4 and 5 are re-stepped rather than merely lifted:
+       lifting near-black ink lands it on top of wine (ΔE 7 — indistinguishable
+       even with full colour vision). Re-stepped they clear ΔE 18.         */
+    --sl-cat-1: #C7632D;  --sl-cat-2: #6F8199;  --sl-cat-3: #639922;
+    --sl-cat-4: #9D5E7A;  --sl-cat-5: #A6A4A2;
+    --sl-chart-slate: #6F8199;  --sl-chart-moss: #639922;  --sl-chart-amber: #C0691B;
+    --sl-chart-wine: #9D5E7A;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --sl-paper:         #1A1917;
+  --sl-paper-base:    #1A1917;
+  --sl-surface:       #232120;
+  --sl-surface-mist:  #2C2A28;
+  --sl-surface-cream: #2E1E0F;
+
+  --sl-ink:           #F5F1EA;
+  --sl-ink-body:      #F5F1EA;
+  --sl-ink-muted:     #98938C;
+  --sl-on-ink:        #1A1917;
+
+  --sl-border:        #38352F;
+  --sl-border-strong: #454138;
+
+  --sl-accent:        #E07A38;
+  --sl-accent-hover:  #F0965C;
+  --sl-accent-ink:    #E07A38;
+  --sl-accent-ink-hover: #F0965C;
+  --sl-accent-soft:   rgba(224, 122, 56, 0.16);
+  --sl-accent-light:  #2E1E0F;
+
+  /* The fill keeps the lifted terracotta; the label on it becomes ink.
+     White on #E07A38 is 3.00:1 and fails AA — see the light block. */
+  --sl-accent-fill:       #E07A38;
+  --sl-accent-fill-hover: #F0965C;
+  --sl-on-accent:         #1A1917;
+
+  --sl-code-bg:     #232120;
+  --sl-code-fg:     #F5F1EA;
+  --sl-code-border: #38352F;
+  --sl-scrim:       rgba(0, 0, 0, 0.62);
+
+  /* --- Status ------------------------------------------------------------
+     Same six hues, inverted the way the rest of the palette inverts: the
+     fill drops to a dark tint of its own hue, the label lifts until it
+     clears AA on that fill. Without these the light fills survive into the
+     dark theme and every chip becomes cream-on-cream.
+     Ratios below are label-on-fill.                                       */
+  --sl-success-bg:     #26321C;  --sl-success-text:   #83B456;  --sl-success-dot:    #639922; /* 5.6:1 */
+  --sl-attention-bg:   #40291E;  --sl-attention-text: #EF8D5D;  --sl-attention-dot:  #C4602A; /* 5.6:1 */
+  --sl-warning-bg:     #3F2A1B;  --sl-warning-text:   #E89150;  --sl-warning-dot:    #B7600B; /* 5.5:1 */
+  --sl-error-bg:       #422725;  --sl-error-text:     #F3867F;  --sl-error-dot:      #E24B4A; /* 5.5:1 */
+  --sl-info-bg:        #292F36;  --sl-info-text:      #95A7BF;  --sl-info-dot:       #677890; /* 5.5:1 */
+  --sl-neutral-bg:     #2F2E2C;  --sl-neutral-text:   #A9A5A0;  --sl-neutral-dot:    #7A7670; /* 5.5:1 */
+
+  /* --- Data visualisation -------------------------------------------------
+     Every mark lifted until it clears 3:1 on dark.surface (#232120). The
+     light set cannot carry over: slot 5 is near-black ink, which is
+     invisible on an ink ground.                                          */
+  --sl-chart-1: #B0562C;  --sl-chart-2: #C4602A;  --sl-chart-3: #D27C53;
+  --sl-chart-4: #E9A88A;  --sl-chart-5: #F4D2C3;
+  /* Categorical. Slots 4 and 5 are re-stepped rather than merely lifted:
+     lifting near-black ink lands it on top of wine (ΔE 7 — indistinguishable
+     even with full colour vision). Re-stepped they clear ΔE 18.         */
+  --sl-cat-1: #C7632D;  --sl-cat-2: #6F8199;  --sl-cat-3: #639922;
+  --sl-cat-4: #9D5E7A;  --sl-cat-5: #A6A4A2;
+  --sl-chart-slate: #6F8199;  --sl-chart-moss: #639922;  --sl-chart-amber: #C0691B;
+  --sl-chart-wine: #9D5E7A;
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+
+/* ==========================================================================
+   Base — the two rules every Since Labs surface must honour
+   ========================================================================== */
+
+body {
+  background: var(--sl-paper);
+  color: var(--sl-ink-body);
+  font-family: var(--sl-font-sans);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--sl-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

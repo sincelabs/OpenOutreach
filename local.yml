@@ -18,3 +18,34 @@ services:
       # Only the CRM is mounted — the code is what the image was built from, so
       # moving an instance forward is `git pull` + rebuild, never a live edit.
       - ./data:/app/data
+
+  # One-off: creates the schema (the config app's own migration included) and exits.
+  # `dashboard` depends on it rather than racing `app` for who migrates first.
+  migrate:
+    build:
+      context: .
+      dockerfile: ./compose/openoutreach/Dockerfile
+    command: ["openoutreach", "migrate", "--noinput"]
+    environment:
+      - HOST_UID=${HOST_UID:-1000}
+      - HOST_GID=${HOST_GID:-1000}
+    volumes:
+      - ./data:/app/data
+
+  # The config dashboard (dashboard/README.md) — reads and writes the same SQLite file
+  # over the same bind mount as `app`, so there is nothing else to host: one file, one
+  # volume, no separate database. `DASHBOARD_PASSWORD` is its one required variable;
+  # every OPENOUTFIND_*/OUTSEND_* field is edited on the page itself once signed in.
+  dashboard:
+    build:
+      context: ./dashboard
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      - DASHBOARD_PASSWORD=${DASHBOARD_PASSWORD:?set DASHBOARD_PASSWORD to sign in to the dashboard}
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "3000:3000"

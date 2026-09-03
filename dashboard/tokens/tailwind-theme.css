@@ -1,0 +1,101 @@
+/* ==========================================================================
+   Since Labs — Tailwind v4 theme
+   v2.0.0 · 2026-08-28
+
+   Import AFTER `@import "tailwindcss"` and after since-brand.css.
+
+     @import "tailwindcss";
+     @import "@sincelabs/brand/tokens/since-brand.css";
+     @import "@sincelabs/brand/tokens/tailwind-theme.css";
+
+   The short utility names (bg-paper, text-ink, border-borderl …) are the ones
+   sincelabs/app already ships, so this is drop-in for that codebase. New
+   surfaces should prefer the fully-named aliases at the bottom.
+   ========================================================================== */
+
+@theme inline {
+  /* --- Colour ----------------------------------------------------------- */
+  --color-paper:      var(--sl-paper);
+  --color-base:       var(--sl-paper-base);
+  --color-white:      var(--sl-surface);
+  --color-mist:       var(--sl-surface-mist);
+  --color-cream:      var(--sl-surface-cream);
+
+  --color-ink:        var(--sl-ink);
+  --color-body:       var(--sl-ink-body);
+  --color-muted:      var(--sl-ink-muted);
+  --color-on-ink:     var(--sl-on-ink);
+
+  --color-terra:      var(--sl-accent);
+  --color-terra-hover:var(--sl-accent-hover);
+  --color-terraink:   var(--sl-accent-ink);       /* text + links */
+  --color-terraink-hover: var(--sl-accent-ink-hover);
+  --color-terralift:  var(--sl-accent-lift);      /* accent on dark */
+  --color-terrasoft:  var(--sl-accent-soft);
+  /* Filled controls: the fill, its hover, and the label that sits ON it. */
+  --color-terrafill:  var(--sl-accent-fill);
+  --color-terrafill-hover: var(--sl-accent-fill-hover);
+  --color-onterra:    var(--sl-on-accent);
+
+  --color-codebg:     var(--sl-code-bg);
+  --color-codefg:     var(--sl-code-fg);
+  --color-codeborder: var(--sl-code-border);
+  --color-scrim:      var(--sl-scrim);
+
+  --color-borderl:    var(--sl-border);
+  --color-borderw:    var(--sl-border-strong);
+
+  /* Status */
+  --color-success:    var(--sl-success-dot);
+  --color-attention:  var(--sl-attention-dot);
+  --color-warning:    var(--sl-warning-dot);
+  --color-error:      var(--sl-error-dot);
+  --color-info:       var(--sl-info-dot);
+
+  /* Charts — sequential ramp */
+  --color-chart-1: var(--sl-chart-1);
+  --color-chart-2: var(--sl-chart-2);
+  --color-chart-3: var(--sl-chart-3);
+  --color-chart-4: var(--sl-chart-4);
+  --color-chart-5: var(--sl-chart-5);
+
+  /* Charts — categorical */
+  --color-cat-1: var(--sl-cat-1);
+  --color-cat-2: var(--sl-cat-2);
+  --color-cat-3: var(--sl-cat-3);
+  --color-cat-4: var(--sl-cat-4);
+  --color-cat-5: var(--sl-cat-5);
+
+  /* --- Type ------------------------------------------------------------- */
+  --font-lora: var(--sl-font-serif);
+  --font-sans: var(--sl-font-sans);
+  --font-mono: var(--sl-font-mono);
+
+  --text-hero:      var(--sl-text-hero);
+  --text-title:     var(--sl-text-title);
+  --text-section:   var(--sl-text-section);
+  --text-panel:     var(--sl-text-panel);
+  --text-body:      var(--sl-text-body);
+  --text-ui:        var(--sl-text-ui);
+  --text-secondary: var(--sl-text-secondary);
+  --text-eyebrow:   var(--sl-text-eyebrow);
+  --text-micro:     var(--sl-text-micro);
+
+  /* --- Form ------------------------------------------------------------- */
+  --radius-xs:  var(--sl-radius-xs);
+  --radius-sm:  var(--sl-radius-sm);
+  --radius-md:  var(--sl-radius-md);
+  --radius-lg:  var(--sl-radius-lg);
+  --radius-xl:  var(--sl-radius-xl);
+  --radius-2xl: var(--sl-radius-2xl);
+
+  --shadow-raised:  var(--sl-shadow-raised);
+  --shadow-lifted:  var(--sl-shadow-lifted);
+  --shadow-overlay: var(--sl-shadow-overlay);
+
+  --spacing-control-sm: var(--sl-control-sm);
+  --spacing-control-md: var(--sl-control-md);
+  --spacing-control-lg: var(--sl-control-lg);
+
+  --ease-sl: var(--sl-ease);
+}

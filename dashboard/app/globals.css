@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@import "../tokens/since-brand.css";
+@import "../tokens/tailwind-theme.css";
+@import "../tokens/since-motion.css";
+
+body {
+  background: var(--sl-paper);
+}

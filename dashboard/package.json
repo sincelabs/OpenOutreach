@@ -1,0 +1,27 @@
+{
+  "name": "openoutreach-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Password-gated web UI over openoutreach's one config row (SiteConfig) — a browser alternative to `openoutreach init`, not a pipeline runner.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "next": "16.2.11",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.2",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4.3.2",
+    "typescript": "^5.7.3"
+  }
+}

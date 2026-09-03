@@ -61,5 +61,39 @@ services:
     volumes:
       - app-data:/app/data
 
+  # One-off: creates the schema (the config app's own migration included) and exits.
+  # `dashboard` depends on it rather than racing `app` for who migrates first.
+  migrate:
+    build:
+      context: .
+      dockerfile: ./compose/openoutreach/Dockerfile
+    command: ["openoutreach", "migrate", "--noinput"]
+    volumes:
+      - app-data:/app/data
+
+  # dashboard/README.md — a password-gated alternative to the block of OPENOUTFIND_*/
+  # OUTSEND_* variables above. It shares `app`'s own volume, so there is nothing else to
+  # host: one SQLite file, one volume, no separate database to provision in Coolify.
+  #
+  # A variable left blank above (the `:-` default) still *exists* in `app`'s container
+  # environment, and `wizard.apply_to_environment`'s `setdefault` treats "exists" as
+  # "already answered" even when the value is empty — so a field set here, blank or not,
+  # wins over whatever the dashboard has stored for it. Configuring through the dashboard
+  # instead of the block above means leaving these Environment Variables unset in Coolify,
+  # not merely empty.
+  dashboard:
+    build:
+      context: ./dashboard
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      - DASHBOARD_PASSWORD=${DASHBOARD_PASSWORD:?set DASHBOARD_PASSWORD in Coolify's Environment Variables tab}
+    volumes:
+      - app-data:/app/data
+    ports:
+      - "3000:3000"
+
 volumes:
   app-data:

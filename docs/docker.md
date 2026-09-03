@@ -80,6 +80,14 @@ docker run --rm -v /srv/openoutreach:/app/data \
 To browse the rows in a GUI, open `/app/data/db.sqlite3` with any SQLite client — one file holds the
 finder's leads and the sender's mail log both.
 
+### Config dashboard
+
+There is still no web surface *for the pipeline* — but there is now a password-gated web UI for the
+one thing this project remembers: the `SiteConfig` row `openoutreach init` also fills in. See
+`dashboard/README.md`. In Compose it's the `dashboard` service in `local.yml` / `coolify.yml`,
+sharing this same volume rather than needing a database of its own — set `DASHBOARD_PASSWORD` and
+run `docker compose -f local.yml up dashboard`. It has no route for `find`, `send` or `run`.
+
 ---
 
 ## Build from Source (Docker Compose)
