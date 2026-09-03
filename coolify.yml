@@ -1,0 +1,25 @@
+# coolify.yml — the Coolify deploy (docs/coolify.md). Same Dockerfile as local.yml, built
+# from this checkout on every deploy — there is no `image:` line here on purpose, because
+# a published tag (`:latest` included) is a different program than whatever this repo's
+# current commit says the code is.
+#
+# The container has no daemon of its own (docs/docker.md): the work verb is bounded by a
+# goal and exits when it's met. `sleep infinity` only keeps the container alive so Coolify's
+# Scheduled Tasks have something to `docker exec` into — the goal and the cadence belong to
+# that schedule, not to this file. See docs/coolify.md for the full walkthrough.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./compose/openoutreach/Dockerfile
+    command: ["sleep", "infinity"]
+    restart: unless-stopped
+    environment:
+      - HOST_UID=${HOST_UID:-1000}
+      - HOST_GID=${HOST_GID:-1000}
+    volumes:
+      - app-data:/app/data
+
+volumes:
+  app-data:

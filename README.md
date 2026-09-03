@@ -258,6 +258,7 @@ This repo is the orchestrator and holds no pipeline of its own — that is the p
 ├── manage.py           # checkout shim over openoutreach/__main__.py
 ├── pyproject.toml      # package metadata, pinned children, console script
 ├── local.yml           # Docker Compose — the server deploy only
+├── coolify.yml         # Docker Compose — the Coolify deploy (docs/coolify.md)
 └── Makefile            # Shortcuts (setup, run, find, test)
 ```
 
