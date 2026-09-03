@@ -9,11 +9,12 @@
 - **Nothing under `openoutreach/` may reimplement a child.** A duplicated fork of the finder lived here until it was deleted, and it had already started to diverge. What exists is the whole project: `settings.py` (the registry), `config/` (the one model), `wizard.py` (the questions, and the export into both children's variables), `__main__.py` (the verbs).
 - **`openoutreach` imports `openoutsend`, deliberately.** The old rule — *nothing under `openoutreach/` may import `openoutsend`* — was written to keep the pipe honest, and the pipe is kept honest a different way now: **both children still implement and test `outfind find --json | outsend` standalone**, and `openoutreach run` uses that same JSON Lines contract through a buffer rather than a privileged in-memory hand-off. See the `openoutreach-docs` cards `p1-e3-openoutreach-single-entrypoint` and `p1-e2-find-send-boundary-contract`.
 - **Each child must keep running standalone.** `uvx --from openoutfind outfind find 10` with `openoutreach` nowhere in the environment is an acceptance criterion, not a courtesy. A change here that requires a change in a child's *own* settings module is a design error.
-- **There is no daemon and no web surface.** No URLconf, no Django Admin, no sessions, no templates. `run` is a bounded pass, not a loop. Do not reintroduce an unbounded process or a file the tool writes for the operator; both were tried and both were workarounds for a process that never ended.
+- **The Django orchestrator itself still has no web surface.** No URLconf, no Django Admin, no sessions, no templates in `openoutreach/`. `run` is still a bounded pass, not a loop, and nothing here should reintroduce the unbounded daemon that was tried and reverted twice.
+- **`dashboard/` is the one deliberate exception, and it is deliberately not part of this process.** It's a separate Next.js app, built and deployed independently (see `dashboard/README.md`), that opens the exact SQLite file this project owns and edits the one `SiteConfig` row directly — a browser-based alternative to `openoutreach init`, and nothing else. It has no route for `find`/`send`/`run`, no daemon of its own, and no view into leads, mail or the CRM: growing it into any of those is the same mistake this rule has already reverted twice, in a second language. It is gated by exactly one environment variable, `DASHBOARD_PASSWORD`; every field it edits lives in the database and is saved from the page itself, same as the CLI wizard leaves it. Its own schema rule: `dashboard/lib/db.ts` reads and writes the exact table `config/migrations/` creates and never creates that table itself — a model change in `config/models.py` has to land in `dashboard/lib/config-schema.ts` too (see that file's own docstring).
 - **Docs sync**: the CLI's contract has a second reader — `skills/find-leads/SKILL.md`, the Claude Code plugin shipped from this repo (`.claude-plugin/plugin.json` + `marketplace.json`). It restates the verbs, which of them can spend, the export columns and the `ErrorType` vocabulary, so a change to any of those has to land there too. `claude plugin validate .claude-plugin/plugin.json` checks the manifests.
 - **No memory**: Never use the auto-memory system (no MEMORY.md, no memory files). Persistent context belongs in this file.
 - **No API backward compat**: no external users yet — rename, delete and rewrite freely; no shims or re-export modules.
-- **Migrations are almost entirely the children's.** This project owns the one migration graph *over* them and writes only its own config app's (`openoutreach/config/migrations/`). A model change in either child means bumping its pin here and re-running `migrate`.
+- **Migrations are almost entirely the children's.** This project owns the one migration graph *over* them and writes only its own config app's (`openoutreach/config/migrations/`). A model change in either child means bumping its pin here and re-running `migrate`. A model change in `config/models.py` also means updating `dashboard/lib/config-schema.ts` — see the rule above.
 
 ## Project Overview
 
@@ -36,7 +37,9 @@ openoutreach status [--json]  # the finder's own verb
 
 ## Architecture
 
-Three modules and one app, and nothing else.
+Three modules and one app, and nothing else — plus `dashboard/`, which is deliberately
+none of those: a separate Next.js app, not part of the Django registry, not part of
+`openoutreach`'s own process.
 
 - **`settings.py` — the registry.** Both children are Django *projects* that are also reusable
   *apps*; this is a third host for them. `INSTALLED_APPS` is **spelled out** rather than splatted
@@ -117,6 +120,17 @@ Three modules and one app, and nothing else.
   - **Expected failures are one line.** `call_command` bypasses the finder's `run_from_argv`, so
     `_own_verb` catches `OpenOutFindError` and renders it with the finder's own `format_failure`,
     and `OutsendError` the sender's way. A rejected key is an answer, not a traceback.
+- **`dashboard/` — the browser wizard.** A Next.js app that reads and writes `SiteConfig`
+  straight over SQLite (`dashboard/lib/db.ts`), gated by one password (`DASHBOARD_PASSWORD`,
+  `dashboard/lib/auth.ts` — a signed cookie via Web Crypto, no session store). Branded with
+  `sincelabs/brand`'s tokens and component library, copied in wholesale per that repo's own
+  `docs/15-adoption.md` (`dashboard/tokens/`, `dashboard/components/ui/`) — update those the
+  same way, by replacing the files, not by hand-editing around drift. It shares the exact
+  volume `app`'s container already mounts (`local.yml`, `coolify.yml`) rather than provisioning
+  a second database, and depends on a one-off `migrate` service for the schema rather than
+  creating it — see the rule above. It answers the same questions `openoutreach init` asks, in
+  the same groups as `wizard.py`'s own question order (`dashboard/lib/config-schema.ts`); it
+  does not decide what those questions are.
 
 ## Commands
 
@@ -136,6 +150,9 @@ make test
 
 # Docker — the server deploy only
 make build / make up / make stop / make logs
+
+# The config dashboard — see dashboard/README.md
+cd dashboard && npm install && DASHBOARD_PASSWORD=... npm run dev
 ```
 
 ## Testing

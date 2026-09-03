@@ -12,10 +12,15 @@ the finder wrote and the mail the sender sent it are rows in the same store, and
 here, so a name the apps start reading arrives from one definition rather than drifting
 between three settings modules.
 
-**There is no web surface.** No URLconf, no Admin, no sessions, no templates — the verbs
-are `find`, `send`, `status` and `run`, and the config surface is the wizard. `SECRET_KEY`
-exists because Django insists on one; naming that in the value is more honest than
-generating a secret nobody uses.
+**There is no web surface in this process.** No URLconf, no Admin, no sessions, no
+templates — the verbs are `find`, `send`, `status` and `run`, and the config surface is
+the wizard. `SECRET_KEY` exists because Django insists on one; naming that in the value
+is more honest than generating a secret nobody uses.
+
+**`dashboard/` is a second, independent way to answer the wizard's questions — not a
+second surface on this process.** It's a separate Next.js app that reads and writes the
+`SiteConfig` row directly over SQLite, the same way any SQLite client could; nothing in
+this settings module serves it a request. See CLAUDE.md and `dashboard/README.md`.
 
 **This project has exactly one app and one model** — `openoutreach.config.SiteConfig`, the
 answers a person gave. It is here because this is the program with a person in front of
