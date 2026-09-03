@@ -7,6 +7,14 @@
 # goal and exits when it's met. `sleep infinity` only keeps the container alive so Coolify's
 # Scheduled Tasks have something to `docker exec` into — the goal and the cadence belong to
 # that schedule, not to this file. See docs/coolify.md for the full walkthrough.
+#
+# Every OPENOUTFIND_*/OUTSEND_* variable the wizard would otherwise ask for is spelled out
+# below via ${VAR} substitution, so this file is the full shape of what's configurable —
+# but the *values* are never written here. This file is checked into git; a real API key or
+# mailbox password committed here would sit in the repo's history forever, readable by
+# anyone with repo access, even after being "removed" in a later commit. Set the actual
+# values once in Coolify's Environment Variables tab (same names as below) and Coolify
+# exports them into this file's substitutions at deploy time.
 
 services:
   app:
@@ -18,6 +26,38 @@ services:
     environment:
       - HOST_UID=${HOST_UID:-1000}
       - HOST_GID=${HOST_GID:-1000}
+
+      # ── required — see docs/coolify.md for what each one is ──
+      - OPENOUTFIND_PRODUCT_DOCS=${OPENOUTFIND_PRODUCT_DOCS:-}
+      - OUTSEND_PRODUCT_DOCS=${OUTSEND_PRODUCT_DOCS:-}
+      - OPENOUTFIND_CAMPAIGN_TARGET=${OPENOUTFIND_CAMPAIGN_TARGET:-}
+      - OUTSEND_CAMPAIGN_TARGET=${OUTSEND_CAMPAIGN_TARGET:-}
+      - OPENOUTFIND_AI_MODEL=${OPENOUTFIND_AI_MODEL:-}
+      - OUTSEND_AI_MODEL=${OUTSEND_AI_MODEL:-}
+      - OPENOUTFIND_LLM_API_KEY=${OPENOUTFIND_LLM_API_KEY:-}
+      - OUTSEND_LLM_API_KEY=${OUTSEND_LLM_API_KEY:-}
+      - OPENOUTFIND_BETTERCONTACT_API_KEY=${OPENOUTFIND_BETTERCONTACT_API_KEY:-}
+      - OUTSEND_OPERATOR_NAME=${OUTSEND_OPERATOR_NAME:-}
+      - OPENOUTFIND_OPERATOR_EMAIL=${OPENOUTFIND_OPERATOR_EMAIL:-}
+      - OUTSEND_OPERATOR_EMAIL=${OUTSEND_OPERATOR_EMAIL:-}
+      - OPENOUTFIND_COUNTRY=${OPENOUTFIND_COUNTRY:-}
+      - OPENOUTFIND_ACCEPT_LEGAL_NOTICE=${OPENOUTFIND_ACCEPT_LEGAL_NOTICE:-}
+      - OUTSEND_MAILBOX_ADDRESS=${OUTSEND_MAILBOX_ADDRESS:-}
+      - OUTSEND_MAILBOX_PASSWORD=${OUTSEND_MAILBOX_PASSWORD:-}
+
+      # ── optional — blank means "use the child's own default" ──
+      - OPENOUTFIND_LLM_API_BASE=${OPENOUTFIND_LLM_API_BASE:-}
+      - OUTSEND_LLM_API_BASE=${OUTSEND_LLM_API_BASE:-}
+      - OUTSEND_SMTP_HOST=${OUTSEND_SMTP_HOST:-}
+      - OUTSEND_SMTP_PORT=${OUTSEND_SMTP_PORT:-}
+      - OUTSEND_IMAP_HOST=${OUTSEND_IMAP_HOST:-}
+      - OUTSEND_IMAP_PORT=${OUTSEND_IMAP_PORT:-}
+      - OUTSEND_SIGNATURE=${OUTSEND_SIGNATURE:-}
+      - OUTSEND_BOOKING_LINK=${OUTSEND_BOOKING_LINK:-}
+      - OPENOUTFIND_APOLLO_API_KEY=${OPENOUTFIND_APOLLO_API_KEY:-}
+      - OPENOUTFIND_EMAIL_FINDER=${OPENOUTFIND_EMAIL_FINDER:-}
+      - OPENOUTFIND_CONTACTS_API_TOKEN=${OPENOUTFIND_CONTACTS_API_TOKEN:-}
+      - OPENOUTFIND_NEWSLETTER=${OPENOUTFIND_NEWSLETTER:-}
     volumes:
       - app-data:/app/data
 

@@ -63,9 +63,17 @@ If the repository is **public**, skip all of this — step 1 below lets you past
 
 ## 2. Environment variables
 
-Open the resource's **Environment Variables** tab — not the compose file — and set every variable
-your onboarding needs. There's no TTY behind a Scheduled Task's `docker exec`, so anything left
-unset here makes the run exit naming the variable rather than prompting for it.
+`coolify.yml` already lists every `OPENOUTFIND_*`/`OUTSEND_*` variable it knows about via
+`${VAR}` substitution — that's the whole configurable surface in one place, so nothing is hiding
+in a UI tab. What it deliberately does **not** contain is a single value: this file is committed to
+git, and a real API key or mailbox password written into it would sit in the repo's history
+forever, readable by anyone with repo access even after a later commit "removes" it.
+
+So: open the resource's **Environment Variables** tab and set each variable there, under the exact
+same name `coolify.yml` references. Coolify exports what you set there into the container's
+environment, which is what `${VAR}` resolves against at deploy time — the file defines the shape,
+the tab holds the secrets. There's no TTY behind a Scheduled Task's `docker exec` either, so
+anything left unset here makes the run exit naming the variable rather than prompting for it.
 
 **Required** (`openoutreach` won't consider itself onboarded without these):
 
