@@ -279,7 +279,8 @@ Working on the pipeline itself? It is not here — clone
 `uv pip install -e ../OpenOutFind`.
 
 Running it on a server instead? A Docker image is published to GitHub Container Registry for exactly
-that — see the **[Docker Guide](./docs/docker.md)**.
+that — see the **[Docker Guide](./docs/docker.md)**, or the **[Coolify Guide](./docs/coolify.md)**
+if that's what supervises your infrastructure.
 
 ---
 
