@@ -258,6 +258,7 @@ This repo is the orchestrator and holds no pipeline of its own — that is the p
 ├── manage.py           # checkout shim over openoutreach/__main__.py
 ├── pyproject.toml      # package metadata, pinned children, console script
 ├── local.yml           # Docker Compose — the server deploy only
+├── coolify.yml         # Docker Compose — the Coolify deploy (docs/coolify.md)
 └── Makefile            # Shortcuts (setup, run, find, test)
 ```
 
@@ -279,7 +280,8 @@ Working on the pipeline itself? It is not here — clone
 `uv pip install -e ../OpenOutFind`.
 
 Running it on a server instead? A Docker image is published to GitHub Container Registry for exactly
-that — see the **[Docker Guide](./docs/docker.md)**.
+that — see the **[Docker Guide](./docs/docker.md)**, or the **[Coolify Guide](./docs/coolify.md)**
+if that's what supervises your infrastructure.
 
 ---
 
